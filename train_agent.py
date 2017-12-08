@@ -1,11 +1,13 @@
 import numpy as np
-import tensorflow as tf
 
 import keras
 from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
+from keras.models import load_model
+import h5py
+
 from keras import backend as K
 
 # custom modules
@@ -81,7 +83,7 @@ validation_data_y = valid_data[1]
 
 batch_size = 128
 num_classes = 5
-epochs = 4
+epochs = 1
 
 
 
@@ -124,7 +126,7 @@ score = model.evaluate(validation_data_x, validation_data_y, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
-
+model.save('robobust.h5')
 # 2. save your trained model
 
 
