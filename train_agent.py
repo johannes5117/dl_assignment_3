@@ -28,6 +28,7 @@ trans = TransitionTable(opt.state_siz, opt.act_num, opt.hist_len,
                              opt.minibatch_size, opt.valid_size,
                              opt.states_fil, opt.labels_fil)
 
+historyLength = 4
 # 1. train
 ######################################
 # TODO implement your training here!
@@ -42,24 +43,36 @@ print(valid_data[1].shape)
 xdata = np.array(valid_data[0])
 
 
-newShape = np.reshape(xdata, (500,4,25,25))
+newShape = np.reshape(xdata, (500,historyLength,25,25))
 print(newShape.shape)
+newShapeSafe = newShape
+print(newShapeSafe.shape)
+newShape2 = newShape[1,:,:,:]
 newShape = newShape[0,:,:,:]
+
 newShape[newShape > 50] = 2
 newShape[newShape > 17] = 1
 
 
+newShape2[newShape2 > 50] = 2
+newShape2[newShape2 > 17] = 1
+
 newShape = np.asarray(newShape, dtype=np.uint8)
+newShape2 = np.asarray(newShape2, dtype=np.uint8)
 
 print(newShape)
 
 
 newShape = newShape[:, 0::5, 0::5]
-np.savetxt("tetNorm.txt", newShape[2,:,:].astype(int),fmt='%i')
+newShape2 = newShape2[:, 0::5, 0::5]
 
 newShape = newShape.reshape(-1,newShape.shape[1])
+np.savetxt("tetAll0.txt", newShape.astype(int),fmt='%i')
 
-np.savetxt("tetAll.txt", newShape.astype(int),fmt='%i')
+newShape2 = newShape2.reshape(-1,newShape2.shape[1])
+np.savetxt("tetAll1.txt", newShape2.astype(int),fmt='%i')
+
+
 # 
 # alternatively you can get one random mini batch line this
 #
@@ -68,12 +81,13 @@ np.savetxt("tetAll.txt", newShape.astype(int),fmt='%i')
 # Hint: to ease loading your model later create a model.py file
 # where you define your network configuration
 ######################################
-exit()
+
 batch_size = 128
 num_classes = 10
 epochs = 12
 
 # input image dimensions
+#img_rows, img_cols = 5, 5 * historyLength
 img_rows, img_cols = 28, 28
 
 # the data, shuffled and split between train and test sets
