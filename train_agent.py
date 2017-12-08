@@ -40,29 +40,32 @@ valid_data = trans.get_valid()
 print(train_data[0].shape)
 print(train_data[1].shape)
 
-xdata = np.array(train_data[0])
+np_train_data = np.array(train_data[0])
+training_data_x = np.reshape(np_train_data, (np_train_data.shape[0], 4, 25, 25))
+training_data_x = np.rot90(training_data_x, axes=(1, 2))
+training_data_x = np.rot90(training_data_x, axes=(2, 3))
+training_data_x[training_data_x > 50] = 2
+training_data_x[training_data_x > 10] = 1
 
 
-newShape = np.reshape(xdata, (xdata.shape[0],4,25,25))
-print(newShape.shape)
-newShape = np.rot90(newShape, axes=(1,2))
-newShape = np.rot90(newShape, axes=(2,3))
-print(newShape.shape)
+np_valid_data = np.array(valid_data[0])
+validation_data_x = np.reshape(np_valid_data, (np_valid_data.shape[0], 4, 25, 25))
+validation_data_x = np.rot90(validation_data_x, axes=(1, 2))
+validation_data_x = np.rot90(validation_data_x, axes=(2, 3))
+validation_data_x[validation_data_x > 50] = 2
+validation_data_x[validation_data_x > 10] = 1
 
-#newShape = newShape[:,0::5,0::5,:]
+validation_data_y = valid_data[1]
 
-newShape[newShape>50] = 2
-newShape[newShape>10] = 1
 
-#print(newShape[0].shape)
-#newShape = newShape[0][0::5,0::5,:][:,:,0]
-print(newShape[0,:,:,0])
-print("")
-print(newShape[0,:,:,1])
-print("")
-print(newShape[0,:,:,2])
-print("")
-print(newShape[0,:,:,3])
+
+#print(training_data_x[0,:,:,0])
+#print("")
+#print(training_data_x[0,:,:,1])
+#print("")
+#print(training_data_x[0,:,:,2])
+#print("")
+#print(training_data_x[0,:,:,3])
 
 
 
@@ -78,19 +81,19 @@ print(newShape[0,:,:,3])
 
 batch_size = 128
 num_classes = 5
-epochs = 12
+epochs = 4
 
 
 
-x_train = newShape[0:xdata.shape[0]-2000,:,:,:]
-x_test =  newShape[xdata.shape[0]-2000:xdata.shape[0],:,:,:]
+x_train = training_data_x[0:np_train_data.shape[0] - 2000, :, :, :]
+x_test = training_data_x[np_train_data.shape[0] - 2000:np_train_data.shape[0], :, :, :]
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 
 # convert class vectors to binary class matrices
-y_train = train_data[1][0:xdata.shape[0]-2000]
-y_test =  train_data[1][xdata.shape[0]-2000:xdata.shape[0]]
+y_train = train_data[1][0:np_train_data.shape[0] - 2000]
+y_test = train_data[1][np_train_data.shape[0] - 2000:np_train_data.shape[0]]
 #y_train = keras.utils.to_categorical(y_train, num_classes)
 #y_test = keras.utils.to_categorical(y_test, num_classes)
 
@@ -117,7 +120,7 @@ model.fit(x_train, y_train,
           epochs=epochs,
           verbose=1,
           validation_data=(x_test, y_test))
-score = model.evaluate(x_test, y_test, verbose=0)
+score = model.evaluate(validation_data_x, validation_data_y, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
