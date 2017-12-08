@@ -43,11 +43,10 @@ print(train_data[1].shape)
 xdata = np.array(train_data[0])
 
 
-newShape = np.reshape(xdata, (xdata.shape[0],100,25))
+newShape = np.reshape(xdata, (xdata.shape[0],4,25,25))
 print(newShape.shape)
 newShape = np.rot90(newShape, axes=(1,2))
-newShape = np.reshape(xdata, (xdata.shape[0],25,25,4))
-
+newShape = np.rot90(newShape, axes=(2,3))
 print(newShape.shape)
 
 #newShape = newShape[:,0::5,0::5,:]
@@ -55,9 +54,16 @@ print(newShape.shape)
 newShape[newShape>50] = 2
 newShape[newShape>10] = 1
 
-print(newShape[0].shape)
-newShape = newShape[0][0::5,0::5,:][:,:,0]
-print(newShape)
+#print(newShape[0].shape)
+#newShape = newShape[0][0::5,0::5,:][:,:,0]
+print(newShape[0,:,:,0])
+print("")
+print(newShape[0,:,:,1])
+print("")
+print(newShape[0,:,:,2])
+print("")
+print(newShape[0,:,:,3])
+
 
 
 
@@ -76,22 +82,24 @@ epochs = 12
 
 
 
-x_train = newShape[0:490,:,:,:]
-x_test =  newShape[490:500,:,:,:]
+x_train = newShape[0:xdata.shape[0]-2000,:,:,:]
+x_test =  newShape[xdata.shape[0]-2000:xdata.shape[0],:,:,:]
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 
 # convert class vectors to binary class matrices
-y_train = train_data[1][0:490]
-y_test =  train_data[1][490:500]
-y_train = keras.utils.to_categorical(y_train, num_classes)
-y_test = keras.utils.to_categorical(y_test, num_classes)
+y_train = train_data[1][0:xdata.shape[0]-2000]
+y_test =  train_data[1][xdata.shape[0]-2000:xdata.shape[0]]
+#y_train = keras.utils.to_categorical(y_train, num_classes)
+#y_test = keras.utils.to_categorical(y_test, num_classes)
+
+print(y_train.shape)
 
 model = Sequential()
 model.add(Conv2D(32, kernel_size=(3, 3),
                  activation='relu',
-                 input_shape=(4,25,25)))
+                 input_shape=(25,25,4)))
 model.add(Conv2D(64, (3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
