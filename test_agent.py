@@ -12,9 +12,12 @@ opt = Options()
 sim = Simulator(opt.map_ind, opt.cub_siz, opt.pob_siz, opt.act_num)
 
 # TODO: load your agent
-# Hint: If using standard tensorflow api it helps to write your own model.py  
+# Hint: If using standard tensorflow api it helps to write your own model.py
 # file with the network configuration, including a function model.load().
 # You can use saver = tf.train.Saver() and saver.restore(sess, filename_cpkt)
+from keras.models import load_model
+model = load_model('robobust.h5')
+historyLength = 4
 
 agent =None
 
@@ -29,6 +32,10 @@ action = 0     # action to take given by the network
 
 # start a new game
 state = sim.newGame(opt.tgt_y, opt.tgt_x)
+
+# history with n Images
+history = []
+
 for step in range(opt.eval_steps):
 
     # check if episode ended
@@ -45,16 +52,48 @@ for step in range(opt.eval_steps):
         #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         # Hint: get the image using rgb2gray(state.pob), append latest image to a history 
         # this just gets a random action
-        action = randrange(opt.act_num)
-        state = sim.step(action)
+        if(len(history) == 0):
+            for i in range(0, historyLength):
+                history.append(rgb2gray(state.pob))
 
+        rgb2gray(state.pob).reshape(opt.state_siz)
+
+        # Replace the last image with the new one to obtain a consistent history
+        # TODO: wrap python array into numpy array.
+        history.pop(0)
+        history.append(rgb2gray(state.pob))
+        stack = np.array(history[0])
+        for i in range(1,historyLength):
+            stack = np.dstack((stack, np.array(history[i])))
+
+        # stack[stack > 50]  = 2
+        # stack[stack > 10]  = 1
+        # stack = np.array(stack, dtype=np.uint8)
+        #
+        #
+        # np.savetxt('f1.txt',stack[:,:,0], '%i')
+        # np.savetxt('f2.txt',stack[:,:,1], '%i')
+        # np.savetxt('f3.txt',stack[:,:,2], '%i')
+        # np.savetxt('f4.txt',stack[:,:,3], '%i')
+
+
+        newS = np.zeros((1,25,25,historyLength))
+
+        newS[0] = stack
+        action = model.predict(newS)
+        #action = randrange(opt.act_num)
+        action = np.argmax(action)
+        print(action)
+        state = sim.step(action)
         epi_step += 1
 
     if state.terminal or epi_step >= opt.early_stop:
+        print("TEST")
         epi_step = 0
         nepisodes += 1
         if state.terminal:
             nepisodes_solved += 1
+            print(nepisodes_solved)
         # start a new game
         state = sim.newGame(opt.tgt_y, opt.tgt_x)
 

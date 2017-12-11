@@ -1,7 +1,6 @@
 import numpy as np
 
 import keras
-from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
@@ -30,7 +29,7 @@ trans = TransitionTable(opt.state_siz, opt.act_num, opt.hist_len,
                              opt.minibatch_size, opt.valid_size,
                              opt.states_fil, opt.labels_fil)
 
-historyLength = 4
+historyLength = 22
 # 1. train
 ######################################
 # TODO implement your training here!
@@ -42,20 +41,31 @@ valid_data = trans.get_valid()
 print(train_data[0].shape)
 print(train_data[1].shape)
 
+
+
 np_train_data = np.array(train_data[0])
-training_data_x = np.reshape(np_train_data, (np_train_data.shape[0], 4, 25, 25))
+print(np_train_data.shape)
+training_data_x = np.reshape(np_train_data, (np_train_data.shape[0], historyLength, 25, 25))
 training_data_x = np.rot90(training_data_x, axes=(1, 2))
 training_data_x = np.rot90(training_data_x, axes=(2, 3))
-training_data_x[training_data_x > 50] = 2
-training_data_x[training_data_x > 10] = 1
+#training_data_x[training_data_x > 50] = 2
+#training_data_x[training_data_x > 10] = 1
 
+era = training_data_x[4]
+print(era.shape)
+era[era > 50] = 2
+era[era > 10] = 1
+sug = np.array(era, dtype=np.uint8)
+
+for i in range(0, historyLength):
+    np.savetxt('f'+str(i)+'.txt', sug[:,:,i], '%i')
 
 np_valid_data = np.array(valid_data[0])
-validation_data_x = np.reshape(np_valid_data, (np_valid_data.shape[0], 4, 25, 25))
+validation_data_x = np.reshape(np_valid_data, (np_valid_data.shape[0], historyLength, 25, 25))
 validation_data_x = np.rot90(validation_data_x, axes=(1, 2))
 validation_data_x = np.rot90(validation_data_x, axes=(2, 3))
-validation_data_x[validation_data_x > 50] = 2
-validation_data_x[validation_data_x > 10] = 1
+#validation_data_x[validation_data_x > 50] = 2
+#validation_data_x[validation_data_x > 10] = 1
 
 validation_data_y = valid_data[1]
 
@@ -83,7 +93,7 @@ validation_data_y = valid_data[1]
 
 batch_size = 128
 num_classes = 5
-epochs = 1
+epochs = 3
 
 
 
@@ -104,7 +114,7 @@ print(y_train.shape)
 model = Sequential()
 model.add(Conv2D(32, kernel_size=(3, 3),
                  activation='relu',
-                 input_shape=(25,25,4)))
+                 input_shape=(25,25,historyLength)))
 model.add(Conv2D(64, (3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))

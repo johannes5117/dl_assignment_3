@@ -17,7 +17,7 @@ class Options:
         # this defines the goal positionw
         tgt_y = 12
         tgt_x = 11
-        early_stop = 50
+        early_stop = 10
     elif map_ind == 1:
         cub_siz = 10
         pob_siz = 3 # for partial observation
@@ -32,7 +32,7 @@ class Options:
     act_num = 5
 
     # traing hyper params
-    hist_len = 4
+    hist_len = 22
     minibatch_size  = 32
     n_minibatches   = 500
     valid_size      = 500
