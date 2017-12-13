@@ -1,8 +1,8 @@
-import numpy as np
 import matplotlib
+import numpy as np
+
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-from random import randrange
 # custom modules
 from utils     import Options, rgb2gray
 from simulator import Simulator
@@ -17,9 +17,8 @@ sim = Simulator(opt.map_ind, opt.cub_siz, opt.pob_siz, opt.act_num)
 # You can use saver = tf.train.Saver() and saver.restore(sess, filename_cpkt)
 from keras.models import load_model
 model = load_model('robobust.h5')
-historyLength = 4
+historyLength = 22
 
-agent =None
 
 # 1. control loop
 if opt.disp_on:
@@ -62,9 +61,10 @@ for step in range(opt.eval_steps):
         # TODO: wrap python array into numpy array.
         history.pop(0)
         history.append(rgb2gray(state.pob))
-        stack = np.array(history[0])
+        stack = np.rot90(np.rot90(np.array(history[0])))
         for i in range(1,historyLength):
-            stack = np.dstack((stack, np.array(history[i])))
+            stack = np.dstack((stack, np.rot90(np.rot90(np.array(history[i])))))
+
 
         # stack[stack > 50]  = 2
         # stack[stack > 10]  = 1
@@ -83,22 +83,20 @@ for step in range(opt.eval_steps):
         action = model.predict(newS)
         #action = randrange(opt.act_num)
         action = np.argmax(action)
-        print(action)
         state = sim.step(action)
         epi_step += 1
 
+
     if state.terminal or epi_step >= opt.early_stop:
-        print("TEST")
         epi_step = 0
         nepisodes += 1
         if state.terminal:
             nepisodes_solved += 1
             print(nepisodes_solved)
+        else:
+            print("knock out")
         # start a new game
         state = sim.newGame(opt.tgt_y, opt.tgt_x)
-
-    if step % opt.prog_freq == 0:
-        print(step)
 
     if opt.disp_on:
         if win_all is None:

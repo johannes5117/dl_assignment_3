@@ -19,7 +19,7 @@ print(train_data[1].shape)
 
 
 np_train_data = np.array(train_data[0])
-training_data_x = np.reshape(np_train_data, (np_train_data.shape[0], 4, 25, 25))
+training_data_x = np.reshape(np_train_data, (np_train_data.shape[0], 22, 25, 25))
 training_data_x = np.rot90(training_data_x, axes=(1, 2))
 training_data_x = np.rot90(training_data_x, axes=(2, 3))
 
@@ -30,11 +30,16 @@ for i in range(0,200):
     print("Predicted: "+str(np.argmax(prediction))+ " Real: "+str(np.argmax(train_data[1][to_predict])))
 
 
+
     era = training_data_x[to_predict:to_predict + 1, :, :, :]
     print(era.shape)
+    era[era > 240] = 4
+    era[era > 100] = 3
     era[era > 50] = 2
     era[era > 10] = 1
     sug = np.array(era, dtype=np.uint8)
 
-    np.savetxt('f1.txt', sug[0,:, :, 0], '%i')
+    np.savetxt('f1.txt', sug[0, :, :, 21], '%i')
+    if np.max(sug[0, :, :, 21] > 2):
+        input("Hey")
     print("DGB")

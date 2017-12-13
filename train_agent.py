@@ -1,19 +1,13 @@
-import numpy as np
-
 import keras
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Flatten
+import numpy as np
 from keras.layers import Conv2D, MaxPooling2D
-from keras.models import load_model
-import h5py
+from keras.layers import Dense, Dropout, Flatten
+from keras.models import Sequential
 
-from keras import backend as K
-
-# custom modules
-from utils     import Options
 from simulator import Simulator
 from transitionTable import TransitionTable
-
+# custom modules
+from utils import Options
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # NOTE:
@@ -93,7 +87,7 @@ validation_data_y = valid_data[1]
 
 batch_size = 128
 num_classes = 5
-epochs = 3
+epochs = 30
 
 
 
