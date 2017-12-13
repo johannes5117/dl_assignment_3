@@ -17,7 +17,7 @@ There are five main files that should be of interest for you:
 Additionally you can change the map layour (or add new maps) by drawing a map in the format defined in maps.py.
 
 # Results
-####Measured with following CNN:
+#### Measured with following CNN:
 
 Layer 1: 32 Filter, 3x3 Kernel, relu activation <br>
 Layer 2: 64 Filter, 3x3 Kernel, relu activation <br>
@@ -33,7 +33,7 @@ minibatch_size  = 32
 n_minibatches   = 500
 standard_window with 5x5
 
-#####Historylength (h) Variation:
+##### Historylength (h) Variation:
 h=1:    Test accuracy: 0.93 , episod_solved/episod = 0.756 <br>
 h=2:    Test accuracy: 0.94 , episod_solved/episod = 1 <br>
 h=3:    Test accuracy: 0.953, episod_solved/episod = 1 <br>
@@ -41,7 +41,7 @@ h=5:    Test accuracy: 0.954, episod_solved/episod = 1 <br>
 h=10:   Test accuracy: 0.978, episod_solved/episod = 1 <br>
 h=20:   Test accuracy: 0.968, episod_solved/episod = 0.943
 
-#####Partial Observation (po) Variation:
+##### Partial Observation (po) Variation:
 Tested with a history length of 4 
 
 po=3:   Test accuracy: 0.88 , episod_solved/episod = 0.898 <br>
@@ -51,7 +51,7 @@ po=7:   Doesn't work with the map since the border is only 2 thick the window wo
 Observation: 
 - A bigger window makes the scene the robo sees more identificable. <br> 
 
-#####Changing the target position:
+##### Changing the target position:
 Even with different historylengths the agent has only a little chance to find the target (if it's on its way he'll make it).
 We found it very funny how he held to the position he thought it should be and looked it up several times. <br>
 We find that, this result is obvious, since we trained the agent on the A* for the old position. There is nothing in his logic to pursue the real position of the target. 
