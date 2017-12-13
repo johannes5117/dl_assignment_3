@@ -1,9 +1,11 @@
 import numpy as np; np.random.seed(0)
-from random import randrange
 # custom modules
 from utils     import Options, rgb2gray
 from simulator import Simulator
+import matplotlib
 
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
 # 0. initialization
 opt = Options()
 sim = Simulator(opt.map_ind, opt.cub_siz, opt.pob_siz, opt.act_num)
@@ -38,19 +40,18 @@ for step in range(opt.data_steps):
 
     if step % opt.prog_freq == 0:
         print(step)
-
     if opt.disp_on:
         if win_all is None:
-            import pylab as pl
-            pl.figure()
-            win_all = pl.imshow(state.screen)
-            pl.figure()
-            win_pob = pl.imshow(state.pob)
+            plt.subplot(121)
+            win_all = plt.imshow(state.screen)
+            plt.subplot(122)
+            win_pob = plt.imshow(state.pob)
         else:
             win_all.set_data(state.screen)
             win_pob.set_data(state.pob)
-        pl.pause(opt.disp_interval)
-        pl.draw()
+        plt.pause(opt.disp_interval)
+        plt.draw()
+    # time.sleep(0.2)
 
 # 2. save to disk
 print('saving data ...')
