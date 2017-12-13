@@ -23,7 +23,7 @@ trans = TransitionTable(opt.state_siz, opt.act_num, opt.hist_len,
                              opt.minibatch_size, opt.valid_size,
                              opt.states_fil, opt.labels_fil)
 
-historyLength = 22
+historyLength = opt.hist_len
 # 1. train
 ######################################
 # TODO implement your training here!
@@ -89,17 +89,16 @@ batch_size = 128
 num_classes = 5
 epochs = 30
 
-
-
-x_train = training_data_x[0:np_train_data.shape[0] - 2000, :, :, :]
-x_test = training_data_x[np_train_data.shape[0] - 2000:np_train_data.shape[0], :, :, :]
+x_train = training_data_x[0:np_train_data.shape[0] - np.math.floor(opt.n_minibatches * 0.2), :, :, :]
+x_test = training_data_x[np_train_data.shape[0] - np.math.floor(opt.n_minibatches * 0.2):np_train_data.shape[0], :, :,
+         :]
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 
 # convert class vectors to binary class matrices
-y_train = train_data[1][0:np_train_data.shape[0] - 2000]
-y_test = train_data[1][np_train_data.shape[0] - 2000:np_train_data.shape[0]]
+y_train = train_data[1][0:np_train_data.shape[0] - np.math.floor(opt.n_minibatches * 0.2)]
+y_test = train_data[1][np_train_data.shape[0] - np.math.floor(opt.n_minibatches * 0.2):np_train_data.shape[0]]
 #y_train = keras.utils.to_categorical(y_train, num_classes)
 #y_test = keras.utils.to_categorical(y_test, num_classes)
 

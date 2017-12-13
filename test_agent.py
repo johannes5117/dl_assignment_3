@@ -17,7 +17,7 @@ sim = Simulator(opt.map_ind, opt.cub_siz, opt.pob_siz, opt.act_num)
 # You can use saver = tf.train.Saver() and saver.restore(sess, filename_cpkt)
 from keras.models import load_model
 model = load_model('robobust.h5')
-historyLength = 22
+historyLength = opt.hist_len
 
 
 # 1. control loop

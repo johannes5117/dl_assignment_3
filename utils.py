@@ -32,7 +32,7 @@ class Options:
     act_num = 5
 
     # traing hyper params
-    hist_len = 22
+    hist_len = 5
     minibatch_size  = 32
     n_minibatches   = 500
     valid_size      = 500
