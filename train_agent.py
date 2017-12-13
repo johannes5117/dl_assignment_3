@@ -39,42 +39,18 @@ print(train_data[1].shape)
 
 np_train_data = np.array(train_data[0])
 print(np_train_data.shape)
-training_data_x = np.reshape(np_train_data, (np_train_data.shape[0], historyLength, 25, 25))
+training_data_x = np.reshape(np_train_data, (
+np_train_data.shape[0], historyLength, opt.pob_siz * opt.cub_siz, opt.pob_siz * opt.cub_siz))
 training_data_x = np.rot90(training_data_x, axes=(1, 2))
 training_data_x = np.rot90(training_data_x, axes=(2, 3))
-#training_data_x[training_data_x > 50] = 2
-#training_data_x[training_data_x > 10] = 1
-
-era = training_data_x[4]
-print(era.shape)
-era[era > 50] = 2
-era[era > 10] = 1
-sug = np.array(era, dtype=np.uint8)
-
-for i in range(0, historyLength):
-    np.savetxt('f'+str(i)+'.txt', sug[:,:,i], '%i')
 
 np_valid_data = np.array(valid_data[0])
-validation_data_x = np.reshape(np_valid_data, (np_valid_data.shape[0], historyLength, 25, 25))
+validation_data_x = np.reshape(np_valid_data, (
+np_valid_data.shape[0], historyLength, opt.pob_siz * opt.cub_siz, opt.pob_siz * opt.cub_siz))
 validation_data_x = np.rot90(validation_data_x, axes=(1, 2))
 validation_data_x = np.rot90(validation_data_x, axes=(2, 3))
-#validation_data_x[validation_data_x > 50] = 2
-#validation_data_x[validation_data_x > 10] = 1
 
 validation_data_y = valid_data[1]
-
-
-
-#print(training_data_x[0,:,:,0])
-#print("")
-#print(training_data_x[0,:,:,1])
-#print("")
-#print(training_data_x[0,:,:,2])
-#print("")
-#print(training_data_x[0,:,:,3])
-
-
-
 
 # 
 # alternatively you can get one random mini batch line this
@@ -99,15 +75,14 @@ print(x_test.shape[0], 'test samples')
 # convert class vectors to binary class matrices
 y_train = train_data[1][0:np_train_data.shape[0] - np.math.floor(opt.n_minibatches * 0.2)]
 y_test = train_data[1][np_train_data.shape[0] - np.math.floor(opt.n_minibatches * 0.2):np_train_data.shape[0]]
-#y_train = keras.utils.to_categorical(y_train, num_classes)
-#y_test = keras.utils.to_categorical(y_test, num_classes)
+
 
 print(y_train.shape)
-
+print("Historylength: " + str(historyLength))
 model = Sequential()
 model.add(Conv2D(32, kernel_size=(3, 3),
                  activation='relu',
-                 input_shape=(25,25,historyLength)))
+                 input_shape=(opt.pob_siz * opt.cub_siz, opt.pob_siz * opt.cub_siz, historyLength)))
 model.add(Conv2D(64, (3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
@@ -130,6 +105,5 @@ print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
 model.save('robobust.h5')
-# 2. save your trained model
 
 

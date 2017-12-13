@@ -15,12 +15,12 @@ class Options:
         cub_siz = 5
         pob_siz = 5 # for partial observation
         # this defines the goal positionw
-        tgt_y = 12
+        tgt_y = 10
         tgt_x = 11
         early_stop = 75
     elif map_ind == 1:
         cub_siz = 10
-        pob_siz = 3 # for partial observation
+        pob_siz = 5  # for partial observation
         # this defines the goal positionw
         tgt_y = 5
         tgt_x = 5
@@ -32,11 +32,11 @@ class Options:
     act_num = 5
 
     # traing hyper params
-    hist_len = 5
+    hist_len = 15
     minibatch_size  = 32
     n_minibatches   = 500
     valid_size      = 500
-    eval_nepisodes  = 10
+    eval_nepisodes = 100
 
     data_steps  = n_minibatches * minibatch_size + valid_size
     eval_steps  = early_stop * eval_nepisodes

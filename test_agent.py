@@ -62,6 +62,11 @@ for step in range(opt.eval_steps):
         history.pop(0)
         history.append(rgb2gray(state.pob))
         stack = np.rot90(np.rot90(np.array(history[0])))
+        if historyLength == 1:
+            temp = np.zeros((opt.pob_siz * opt.cub_siz, opt.pob_siz * opt.cub_siz, 1))
+            temp[:, :, 0] = stack
+            stack = temp
+
         for i in range(1,historyLength):
             stack = np.dstack((stack, np.rot90(np.rot90(np.array(history[i])))))
 
@@ -76,11 +81,10 @@ for step in range(opt.eval_steps):
         # np.savetxt('f3.txt',stack[:,:,2], '%i')
         # np.savetxt('f4.txt',stack[:,:,3], '%i')
 
+        temp = np.zeros((1, opt.pob_siz * opt.cub_siz, opt.pob_siz * opt.cub_siz, historyLength))
 
-        newS = np.zeros((1,25,25,historyLength))
-
-        newS[0] = stack
-        action = model.predict(newS)
+        temp[0] = stack
+        action = model.predict(temp)
         #action = randrange(opt.act_num)
         action = np.argmax(action)
         state = sim.step(action)
