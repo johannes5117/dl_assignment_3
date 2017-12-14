@@ -1,5 +1,6 @@
 from keras.models import load_model
 
+### test the CNN if predictions are right
 
 model = load_model('robobust.h5')
 from utils     import Options
@@ -30,13 +31,14 @@ for i in range(0,200):
     print("Predicted: "+str(np.argmax(prediction))+ " Real: "+str(np.argmax(train_data[1][to_predict])))
 
 
-
+    # debug output
     era = training_data_x[to_predict:to_predict + 1, :, :, :]
     print(era.shape)
     era[era > 240] = 4
-    era[era > 100] = 3
-    era[era > 50] = 2
-    era[era > 10] = 1
+    era[era > 100] = 3 # target location
+    era[era > 50] = 2  # occupied
+    era[era > 10] = 1  # robot position
+                  # 0  = free
     sug = np.array(era, dtype=np.uint8)
 
     np.savetxt('f1.txt', sug[0, :, :, 21], '%i')

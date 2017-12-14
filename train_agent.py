@@ -39,8 +39,10 @@ print(train_data[1].shape)
 
 np_train_data = np.array(train_data[0])
 print(np_train_data.shape)
+# split the data (vector) into a representable matrix
 training_data_x = np.reshape(np_train_data, (
 np_train_data.shape[0], historyLength, opt.pob_siz * opt.cub_siz, opt.pob_siz * opt.cub_siz))
+# reformat the data to get into the desired dimensions for the CNN input
 training_data_x = np.rot90(training_data_x, axes=(1, 2))
 training_data_x = np.rot90(training_data_x, axes=(2, 3))
 
@@ -62,12 +64,12 @@ validation_data_y = valid_data[1]
 ######################################
 
 batch_size = 128
-num_classes = 5
+num_classes = 5  # 0 = no action / 1 = up / 2 = down / 3 = left / 4 = right
 epochs = 30
 
+# split data proportionally into training and validation set
 x_train = training_data_x[0:np_train_data.shape[0] - np.math.floor(opt.n_minibatches * 0.2), :, :, :]
-x_test = training_data_x[np_train_data.shape[0] - np.math.floor(opt.n_minibatches * 0.2):np_train_data.shape[0], :, :,
-         :]
+x_test = training_data_x[np_train_data.shape[0] - np.math.floor(opt.n_minibatches * 0.2):np_train_data.shape[0], :, :,:]
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
@@ -79,6 +81,8 @@ y_test = train_data[1][np_train_data.shape[0] - np.math.floor(opt.n_minibatches 
 
 print(y_train.shape)
 print("Historylength: " + str(historyLength))
+
+# define the CNN
 model = Sequential()
 model.add(Conv2D(32, kernel_size=(3, 3),
                  activation='relu',
@@ -95,6 +99,7 @@ model.compile(loss=keras.losses.categorical_crossentropy,
               optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
 
+# train the CNN
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
@@ -105,5 +110,6 @@ print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
 model.save('robobust.h5')
+print('CNN saved')
 
 

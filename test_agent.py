@@ -53,7 +53,7 @@ for step in range(opt.eval_steps):
         # this just gets a random action
         if(len(history) == 0):
             for i in range(0, historyLength):
-                history.append(rgb2gray(state.pob))
+                history.append(rgb2gray(state.pob))  # append first image for initialization
 
         rgb2gray(state.pob).reshape(opt.state_siz)
 
@@ -61,6 +61,7 @@ for step in range(opt.eval_steps):
         # TODO: wrap python array into numpy array.
         history.pop(0)
         history.append(rgb2gray(state.pob))
+        # rotate the images 180° to be consistent with the labels (motion direction)
         stack = np.rot90(np.rot90(np.array(history[0])))
         if historyLength == 1:
             temp = np.zeros((opt.pob_siz * opt.cub_siz, opt.pob_siz * opt.cub_siz, 1))
@@ -71,6 +72,8 @@ for step in range(opt.eval_steps):
             stack = np.dstack((stack, np.rot90(np.rot90(np.array(history[i])))))
 
 
+        
+        ### save current state as .txt for debugging
         # stack[stack > 50]  = 2
         # stack[stack > 10]  = 1
         # stack = np.array(stack, dtype=np.uint8)
