@@ -80,3 +80,7 @@ Changing the map:
 With our model currently used our robo doesn't generalize at all on other maps then he was trained for. Maybe we are using the wrong kind of system for such a task. With a CNN the robo learns on the input horizon we give him. As the map stays the same it seems natural that he can easily manage to learn the commands. But with a new map the old sequences (horizons) aren't working anymore. 
 
 We could think about a solution where the robo learns on different maps. The feature selection could then be completly different. E.g. instead of learning a sequence of input images, using the wall as help for navigation. 
+
+There are several more possible ways to improve the generalization. E.g. we could train different on different maps and take a 	confidentially measurement for several predictions and let an arbiter chooce the highest or so.
+
+We implemented the first idea of learning on several different maps. It didn't work. The result didn't generalize either. For further improvements we hope that in the next exercise we take a better suiting system than CNN's.
