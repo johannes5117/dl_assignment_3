@@ -10,12 +10,12 @@ class Options:
     network_fil = "network.json"
     weights_fil = "network.h5"
     # simulator config
-    disp_interval = .005
+    disp_interval = .01
     if map_ind == 0:
         cub_siz = 5
         pob_siz = 5 # for partial observation
         # this defines the goal positionw
-        tgt_y = 10
+        tgt_y = 12
         tgt_x = 11
         early_stop = 75
     elif map_ind == 1:
@@ -24,6 +24,20 @@ class Options:
         # this defines the goal positionw
         tgt_y = 5
         tgt_x = 5
+        early_stop = 75
+    elif map_ind == 2:
+        cub_siz = 5
+        pob_siz = 5  # for partial observation
+        # this defines the goal positionw
+        tgt_y = 12
+        tgt_x = 11
+        early_stop = 75
+    elif map_ind == 3:
+        cub_siz = 5
+        pob_siz = 5  # for partial observation
+        # this defines the goal positionw
+        tgt_y = 12
+        tgt_x = 11
         early_stop = 75
     state_siz = (pob_siz * cub_siz) ** 2 # when use pob as input
     if change_tgt:

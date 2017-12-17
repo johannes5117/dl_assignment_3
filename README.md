@@ -56,3 +56,27 @@ Even with different historylengths the agent has only a little chance to find th
 We found it very funny how he held to the position he thought it should be and looked it up several times. <br>
 We find that, this result is obvious, since we trained the agent on the A* for the old position. There is nothing in his logic to pursue the real position of the target. 
 
+##### Changing the map
+Changing the map:
+ - a little (img2) bit (little bit = blocking some paths, adding new ones, but preserving main structure): preserves the chance that the robo finds his target. With a step limit of 75 he manages to find the target in around 65% of the trials. (We let the test_agent run several times and averaged)
+ - major changes (img3) (major changes = rotating the whole map, keeping target position on old place): the agent is incapable of finding the target. In only 10% of trials he finds the target within 75 steps. 
+ 
+ ![alt text](map_unchanged.png)
+ 
+ img1: unchanged map
+ 
+  ![alt text](map_slightly_changed.png)
+ 
+ img2: map with minor changes
+ 
+  ![alt text](map_major_changes.png)
+ 
+ img3: map with major changes
+ 
+ Conclusion: The agent generalizes badly. With small changes he can still sometimes (luckily) find the target. With major changes he has no chance.
+ 
+
+#### Further ideas
+With our model currently used our robo doesn't generalize at all on other maps then he was trained for. Maybe we are using the wrong kind of system for such a task. With a CNN the robo learns on the input horizon we give him. As the map stays the same it seems natural that he can easily manage to learn the commands. But with a new map the old sequences (horizons) aren't working anymore. 
+
+We could think about a solution where the robo learns on different maps. The feature selection could then be completly different. E.g. instead of learning a sequence of input images, using the wall as help for navigation. 
